@@ -1,0 +1,37 @@
+# ── Web Framework ──────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart       # for file uploads
+
+# ── Database ────────────────────────────────────────────────────
+sqlalchemy
+
+# ── Auth & Security ─────────────────────────────────────────────
+bcrypt
+passlib[bcrypt]
+
+# ── AI & Agents ─────────────────────────────────────────────────
+openai
+langchain
+langchain-openai
+langchain-community
+langgraph
+
+# ── OCR ─────────────────────────────────────────────────────────
+pytesseract
+Pillow
+pdf2image             # convert PDF marksheets to images
+
+# ── HTTP Client (Streamlit → FastAPI) ───────────────────────────
+httpx
+
+# ── Frontend ────────────────────────────────────────────────────
+streamlit
+streamlit-chat        # chat message UI components
+
+# ── Utilities ───────────────────────────────────────────────────
+python-dotenv
+pydantic
+email-validator        # required for EmailStr in schemas
+pandas                 # for data display in dashboard
+plotly                # charts in dashboard
