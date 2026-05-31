@@ -1,0 +1,26 @@
+# Render Blueprint — deploy backend API
+# Dashboard: https://dashboard.render.com → New → Blueprint → connect GitHub repo
+
+services:
+  - type: web
+    name: agentic-ai-tutor-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        value: sqlite:///./data/tutor.db
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: CORS_ORIGIN_REGEX
+        value: https://.*\.streamlit\.app
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    # Optional: add a persistent disk on paid Render plans to keep SQLite data
+    # disk:
+    #   name: tutor-data
+    #   mountPath: /app/data
+    #   sizeGB: 1

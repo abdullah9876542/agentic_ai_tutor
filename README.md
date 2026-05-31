@@ -193,6 +193,54 @@ Full interactive docs: http://localhost:8000/docs
 
 ---
 
+## 🚀 Deployment (Free Tier)
+
+This app runs as **two services**: FastAPI backend (Render) + Streamlit frontend (Streamlit Cloud).
+
+### Step 1 — Deploy the backend (Render)
+
+1. Go to [Render Dashboard](https://dashboard.render.com) and sign in with GitHub.
+2. Click **New → Blueprint**.
+3. Connect repo: `abdullah9876542/agentic_ai_tutor`.
+4. Render reads `render.yaml` and creates the **agentic-ai-tutor-api** service.
+5. When prompted, set **OPENAI_API_KEY** (required).
+6. Wait for deploy to finish. Copy your API URL, e.g. `https://agentic-ai-tutor-api.onrender.com`.
+7. Verify: open `https://YOUR-API-URL/health` — should return `{"status":"healthy"}`.
+
+> **Note:** On Render's free plan, the service sleeps after inactivity (~50s cold start on first request). SQLite data resets on redeploy unless you add a persistent disk (paid).
+
+### Step 2 — Deploy the frontend (Streamlit Cloud)
+
+1. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+2. Click **New app** → select repo `agentic_ai_tutor`.
+3. Set **Main file path** to: `streamlit_app.py`
+4. Open **Advanced settings → Secrets** and paste:
+
+```toml
+FASTAPI_HOST = "https://agentic-ai-tutor-api.onrender.com"
+```
+
+Replace with your actual Render API URL from Step 1.
+
+5. Click **Deploy**. Your app will be at `https://YOUR-APP.streamlit.app`.
+
+### Step 3 — Test end-to-end
+
+1. Open your Streamlit URL.
+2. Register / log in.
+3. Upload a marksheet and run AI analysis.
+
+### Environment variables reference
+
+| Variable | Where | Purpose |
+|----------|-------|---------|
+| `OPENAI_API_KEY` | Render | Powers all AI agents |
+| `FASTAPI_HOST` | Streamlit secrets | Backend URL for the frontend |
+| `CORS_ORIGIN_REGEX` | Render (in render.yaml) | Allows Streamlit Cloud to call the API |
+| Email vars | Render (optional) | Parent report emails |
+
+---
+
 ## 👥 Team
 
 | Name | Reg No | Role |

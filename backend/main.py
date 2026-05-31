@@ -12,6 +12,23 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+
+def _cors_config():
+    origins = ["http://localhost:8501", "http://127.0.0.1:8501"]
+    extra = os.getenv("CORS_ORIGINS", "")
+    if extra:
+        origins.extend(o.strip() for o in extra.split(",") if o.strip())
+    return {
+        "allow_origins": origins,
+        "allow_origin_regex": os.getenv(
+            "CORS_ORIGIN_REGEX", r"https://.*\.streamlit\.app"
+        ),
+        "allow_credentials": True,
+        "allow_methods": ["*"],
+        "allow_headers": ["*"],
+    }
+
+
 from backend.database import engine, Base
 from backend.auth.routes               import router as auth_router
 from backend.ocr.routes                import router as ocr_router
@@ -42,13 +59,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins    = ["http://localhost:8501","http://127.0.0.1:8501"],
-    allow_credentials= True,
-    allow_methods    = ["*"],
-    allow_headers    = ["*"],
-)
+app.add_middleware(CORSMiddleware, **_cors_config())
 
 app.include_router(auth_router)
 app.include_router(ocr_router)
