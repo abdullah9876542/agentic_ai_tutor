@@ -9,7 +9,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/tutor.db")
+if os.getenv("VERCEL"):
+    _default_db = "sqlite:////tmp/data/tutor.db"
+else:
+    _default_db = "sqlite:///./data/tutor.db"
+
+DATABASE_URL = os.getenv("DATABASE_URL", _default_db)
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

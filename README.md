@@ -239,6 +239,16 @@ Replace with your actual Render API URL from Step 1.
 | `CORS_ORIGIN_REGEX` | Render (in render.yaml) | Allows Streamlit Cloud to call the API |
 | Email vars | Render (optional) | Parent report emails |
 
+### Deploying the API on Vercel (backend only)
+
+> **Important:** Vercel can host the **FastAPI backend only**. Streamlit must stay on [Streamlit Cloud](https://share.streamlit.io). Vercel's free tier has a **10s request timeout** — AI analysis/quiz calls (15–20s) may fail. **Render is recommended** for this project.
+
+1. Import repo `abdullah9876542/agentic_ai_tutor` on [vercel.com](https://vercel.com).
+2. Vercel reads `pyproject.toml` → entrypoint `backend.main:app`.
+3. Add environment variable: **OPENAI_API_KEY**
+4. Deploy. Test: `https://YOUR-PROJECT.vercel.app/health`
+5. Set Streamlit secret: `FASTAPI_HOST = "https://YOUR-PROJECT.vercel.app"`
+
 ---
 
 ## 👥 Team

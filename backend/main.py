@@ -12,6 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
+_IS_VERCEL = bool(os.getenv("VERCEL"))
+_DEFAULT_UPLOAD = "/tmp/uploads" if _IS_VERCEL else "uploads"
+_DEFAULT_DATA = "/tmp/data" if _IS_VERCEL else "data"
+
 
 def _cors_config():
     origins = ["http://localhost:8501", "http://127.0.0.1:8501"]
@@ -21,7 +25,8 @@ def _cors_config():
     return {
         "allow_origins": origins,
         "allow_origin_regex": os.getenv(
-            "CORS_ORIGIN_REGEX", r"https://.*\.streamlit\.app"
+            "CORS_ORIGIN_REGEX",
+            r"https://(.*\.streamlit\.app|.*\.vercel\.app)",
         ),
         "allow_credentials": True,
         "allow_methods": ["*"],
@@ -43,8 +48,8 @@ from backend.routes.notification_routes import router as notification_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("\nAgentic AI Tutor API starting...")
-    os.makedirs(os.getenv("UPLOAD_DIR","uploads"), exist_ok=True)
-    os.makedirs("data", exist_ok=True)
+    os.makedirs(os.getenv("UPLOAD_DIR", _DEFAULT_UPLOAD), exist_ok=True)
+    os.makedirs(_DEFAULT_DATA, exist_ok=True)
     Base.metadata.create_all(bind=engine)
     print("Database tables ready.")
     print("Swagger docs: http://localhost:8000/docs\n")
